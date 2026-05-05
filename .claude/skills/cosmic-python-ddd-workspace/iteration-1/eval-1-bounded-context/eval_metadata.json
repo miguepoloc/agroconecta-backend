@@ -1,0 +1,15 @@
+{
+  "eval_id": 1,
+  "eval_name": "eval-1-bounded-context",
+  "prompt": "Necesito crear un nuevo contexto acotado para órdenes de compra (commerce/order). El Order debe tener: id (UUID), buyer_id, items (lista de OrderItem con product_id y quantity_kg), total_amount (Money), status (PENDING, CONFIRMED, CANCELLED). Cuando se crea una Order debe emitir un evento OrderPlaced. Muéstrame el código completo de todas las capas: domain, application e infrastructure.",
+  "assertions": [
+    {"name": "usa_absolute_imports", "description": "Todos los imports son absolutos (from src...) sin imports relativos ni from __future__", "type": "manual"},
+    {"name": "usa_import_typing", "description": "Usa `import typing` y luego `typing.Optional`, no `from typing import Optional`", "type": "manual"},
+    {"name": "aggregate_hereda_base", "description": "Order hereda de shared_aggregates.BaseAggregateRoot", "type": "manual"},
+    {"name": "evento_dominio_correcto", "description": "OrderPlaced hereda de domain_events.DomainEvent y el aggregate usa record_event()", "type": "manual"},
+    {"name": "mapper_completo", "description": "mappers.py tiene orm_to_domain() y domain_to_orm() con conversiones PosixTime.microseconds", "type": "manual"},
+    {"name": "repository_con_seen", "description": "El repository concreto tiene self._seen: set[Order] y agrega a _seen en put() y find_by_id()", "type": "manual"},
+    {"name": "collect_events_dentro_uow", "description": "collect_new_events() se llama DENTRO del async with uow y publish_many fuera", "type": "manual"},
+    {"name": "posixtime_para_timestamps", "description": "Los timestamps usan PosixTime, ORM usa BigInteger", "type": "manual"}
+  ]
+}

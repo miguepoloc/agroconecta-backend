@@ -1,0 +1,101 @@
+{
+  "skill_name": "cosmic-python-ddd",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "Necesito crear un nuevo contexto acotado para órdenes de compra (commerce/order). El Order debe tener: id (UUID), buyer_id (referencia a User), items (lista de OrderItem con product_id y quantity_kg), total_amount (Money), status (PENDING, CONFIRMED, CANCELLED). Cuando se crea una Order debe emitir un evento OrderPlaced. Muéstrame el código completo de todas las capas: domain, application e infrastructure (sin el router por ahora). Sigue exactamente las convenciones del proyecto AgroConecta.",
+      "expected_output": "Código completo de todas las capas del contexto commerce/order siguiendo exactamente las convenciones del proyecto: imports absolutos, PosixTime para timestamps, Money para total_amount, UuidId para IDs, BaseAggregateRoot, DomainEvent, mappers.py con orm_to_domain/domain_to_orm, repository con _seen set, FastAPIUnitOfWork, command handler con el patrón async with uow + collect_new_events dentro + publish_many fuera.",
+      "assertions": [
+        {
+          "name": "usa_absolute_imports",
+          "description": "Todos los imports son absolutos (from src...) sin imports relativos ni from __future__",
+          "type": "manual"
+        },
+        {
+          "name": "usa_import_typing",
+          "description": "Usa `import typing` y luego `typing.Optional`, no `from typing import Optional`",
+          "type": "manual"
+        },
+        {
+          "name": "aggregate_hereda_base",
+          "description": "Order hereda de shared_aggregates.BaseAggregateRoot",
+          "type": "manual"
+        },
+        {
+          "name": "evento_dominio_correcto",
+          "description": "OrderPlaced hereda de domain_events.DomainEvent y el aggregate usa record_event()",
+          "type": "manual"
+        },
+        {
+          "name": "mapper_completo",
+          "description": "mappers.py tiene orm_to_domain() y domain_to_orm() con conversiones PosixTime.microseconds",
+          "type": "manual"
+        },
+        {
+          "name": "repository_con_seen",
+          "description": "El repository concreto tiene self._seen: set[Order] y agrega a _seen en put() y find_by_id()",
+          "type": "manual"
+        },
+        {
+          "name": "collect_events_dentro_uow",
+          "description": "collect_new_events() se llama DENTRO del async with uow y publish_many fuera",
+          "type": "manual"
+        },
+        {
+          "name": "posixtime_para_timestamps",
+          "description": "Los timestamps usan PosixTime, no datetime directamente. ORM usa BigInteger.",
+          "type": "manual"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "En el contexto catalog/product ya existe el agregado Product. Quiero agregar un endpoint GET /api/v1/products/{product_id} que retorne los detalles del producto. El endpoint debe: ser de solo lectura (no modifica estado), retornar 404 si no existe, incluir el precio, stock, y las imágenes. Muéstrame el query handler, el DTO de output y cómo agregarlo al router existente siguiendo las convenciones del proyecto.",
+      "expected_output": "Query handler en application/handlers/queries.py, DTO de output en dtos/outputs.py, y endpoint en el router. El handler lee directo del session sin UoW (es read-only), usa orm_to_domain del mapper, lanza ProductNotFoundError si no existe. El router accede a session via request.state.db_session.",
+      "assertions": [
+        {
+          "name": "session_via_request_state",
+          "description": "El router obtiene la session con `session = request.state.db_session`, no con Depends",
+          "type": "manual"
+        },
+        {
+          "name": "query_handler_sin_uow",
+          "description": "El query handler de lectura no usa UoW innecesariamente, puede leer directo del session",
+          "type": "manual"
+        },
+        {
+          "name": "lanza_404_correctamente",
+          "description": "Lanza ProductNotFoundError (no HTTPException directamente en el handler)",
+          "type": "manual"
+        },
+        {
+          "name": "dto_output_correcto",
+          "description": "El DTO de output hereda de base_model.DomainModel y tiene los campos requeridos",
+          "type": "manual"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Tengo un bug en el contexto identity. Cuando registro un usuario nuevo, el evento UserRegistered se está publicando ANTES del commit de la base de datos. ¿Por qué ocurre esto y cómo se arregla según la arquitectura Cosmic Python del proyecto? Explícame el patrón correcto con código.",
+      "expected_output": "Explicación del patrón pull-and-clear: collect_new_events() debe llamarse DENTRO del async with uow (después de commit), y publish_many() debe ir FUERA. El bug ocurre cuando se llama collect_new_events() o publish_many() antes del commit, o fuera del contexto del UoW. Debe mostrar el código correcto del handler.",
+      "assertions": [
+        {
+          "name": "explica_pull_and_clear",
+          "description": "Explica correctamente el patrón: commit() → collect_new_events() (dentro) → publish_many() (fuera)",
+          "type": "manual"
+        },
+        {
+          "name": "codigo_correcto_mostrado",
+          "description": "Muestra código concreto con el orden correcto de operaciones",
+          "type": "manual"
+        },
+        {
+          "name": "menciona_seen_set",
+          "description": "Menciona el rol de self._seen en el repository para que collect_new_events funcione",
+          "type": "manual"
+        }
+      ]
+    }
+  ]
+}

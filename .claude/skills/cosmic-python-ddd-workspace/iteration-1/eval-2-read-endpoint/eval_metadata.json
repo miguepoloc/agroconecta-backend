@@ -1,0 +1,11 @@
+{
+  "eval_id": 2,
+  "eval_name": "eval-2-read-endpoint",
+  "prompt": "En el contexto catalog/product ya existe el agregado Product. Quiero agregar un endpoint GET /api/v1/products/{product_id} que retorne los detalles del producto. El endpoint debe: ser de solo lectura (no modifica estado), retornar 404 si no existe, incluir el precio, stock, y las imágenes. Muéstrame el query handler, el DTO de output y cómo agregarlo al router existente.",
+  "assertions": [
+    {"name": "session_via_request_state", "description": "El router obtiene la session con `session = request.state.db_session`, no con Depends", "type": "manual"},
+    {"name": "query_handler_sin_uow", "description": "El query handler de lectura no usa UoW innecesariamente, puede leer directo del session", "type": "manual"},
+    {"name": "lanza_404_correctamente", "description": "Lanza ProductNotFoundError (no HTTPException directamente en el handler)", "type": "manual"},
+    {"name": "dto_output_correcto", "description": "El DTO de output hereda de base_model.DomainModel y tiene los campos requeridos", "type": "manual"}
+  ]
+}

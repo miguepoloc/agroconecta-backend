@@ -1,0 +1,10 @@
+{
+  "eval_id": 3,
+  "eval_name": "eval-3-events-bug",
+  "prompt": "Tengo un bug en el contexto identity. Cuando registro un usuario nuevo, el evento UserRegistered se está publicando ANTES del commit de la base de datos. ¿Por qué ocurre esto y cómo se arregla según la arquitectura Cosmic Python del proyecto? Explícame el patrón correcto con código.",
+  "assertions": [
+    {"name": "explica_pull_and_clear", "description": "Explica correctamente el patrón: commit() → collect_new_events() (dentro) → publish_many() (fuera)", "type": "manual"},
+    {"name": "codigo_correcto_mostrado", "description": "Muestra código concreto con el orden correcto de operaciones", "type": "manual"},
+    {"name": "menciona_seen_set", "description": "Menciona el rol de self._seen en el repository para que collect_new_events funcione", "type": "manual"}
+  ]
+}
