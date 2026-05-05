@@ -1,0 +1,64 @@
+# See https://pre-commit.com for more information
+# See https://pre-commit.com/hooks.html for more hooks
+#
+# All Python hooks use `uv run` (language: system) so they share the
+# project's own virtualenv — no duplicate installs, same versions as uv.lock.
+
+repos:
+  # ── Generic file hygiene ───────────────────────────────────────────────────
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v5.0.0
+    hooks:
+      - id: check-added-large-files      # Block commits with files >500 KB
+        args: ["--maxkb=500"]
+        exclude: ^uv\.lock$
+      - id: check-toml                   # Validate pyproject.toml and friends
+      - id: check-yaml                   # Validate YAML (workflows, CDK, etc.)
+        args: ["--unsafe"]
+      - id: check-json                   # Validate JSON files
+      - id: check-ast                    # Check Python files parse correctly
+      - id: check-merge-conflict         # Reject leftover merge-conflict markers
+      - id: detect-private-key           # Block accidental secret commits
+      - id: debug-statements             # Block forgotten debugger statements
+      - id: end-of-file-fixer            # Ensure files end with a newline
+      - id: trailing-whitespace          # Strip trailing spaces
+      - id: mixed-line-ending            # Normalize to LF
+        args: ["--fix=lf"]
+
+  # ── Python linting & formatting (Ruff via uv) ──────────────────────────────
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff check (lint + autofix)
+        entry: uv run ruff check --force-exclude --fix --exit-non-zero-on-fix
+        language: system
+        types: [python]
+        require_serial: true
+
+      - id: ruff-format
+        name: ruff format
+        entry: uv run ruff format --force-exclude
+        language: system
+        types: [python]
+        require_serial: true
+
+  # ── Static type checking (MyPy via uv) ────────────────────────────────────
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy (type check)
+        entry: uv run mypy backend/src --config-file backend/pyproject.toml
+        language: system
+        types: [python]
+        pass_filenames: false
+        require_serial: true
+
+  # ── Conventional Commits enforcement (commit-msg stage) ───────────────────
+  # Install with: pre-commit install --hook-type commit-msg
+  # Usage: git commit -m "feat(users): add profile endpoint"
+  # Bump version + changelog: uv run cz bump
+  - repo: https://github.com/commitizen-tools/commitizen
+    rev: v4.4.1
+    hooks:
+      - id: commitizen
+        stages: [commit-msg]
