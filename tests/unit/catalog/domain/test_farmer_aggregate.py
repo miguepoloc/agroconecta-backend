@@ -2,8 +2,6 @@
 
 import uuid
 
-import pytest
-
 from src.catalog.farmer.domain import aggregates, events, types, value_objects
 
 

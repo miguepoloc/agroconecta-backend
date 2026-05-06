@@ -5,8 +5,6 @@ import decimal
 
 import pydantic
 
-from src.commerce.order.domain import types
-
 
 class DeliveryAddressOutput(pydantic.BaseModel):
     street: str

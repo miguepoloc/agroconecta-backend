@@ -1,7 +1,5 @@
 """Query handlers for the product context."""
 
-import typing
-
 import sqlalchemy.ext.asyncio
 
 from src.catalog.product.application.dtos import outputs
@@ -60,8 +58,8 @@ def _to_detail(product: product_aggregates.Product) -> outputs.ProductDetailOutp
 
 async def handle_list_products(
     session: sqlalchemy.ext.asyncio.AsyncSession,
-    category: typing.Optional[str] = None,
-    in_stock: typing.Optional[bool] = None,
+    category: str | None = None,
+    in_stock: bool | None = None,
     sort_by: str = "created_at",
     page_size: int = 20,
     offset: int = 0,

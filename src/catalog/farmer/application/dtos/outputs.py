@@ -1,7 +1,5 @@
 """Output DTOs for the farmer context."""
 
-import typing
-
 import pydantic
 
 from src.catalog.farmer.domain import types
@@ -20,19 +18,19 @@ class FarmerSummaryOutput(pydantic.BaseModel):
     user_id: str
     region: str
     department: str
-    bio: typing.Optional[str]
+    bio: str | None
     total_sales: str
     compliance_status: types.ComplianceStatus
     sustainability_rank: types.SustainabilityRank
     certifications: list[CertificationOutput]
     # Identity fields expected by frontend
-    name: typing.Optional[str] = None
-    avatar: typing.Optional[str] = None
-    quote: typing.Optional[str] = None
-    email: typing.Optional[str] = None
-    phone: typing.Optional[str] = None
-    active_products: typing.Optional[int] = 0
-    joined_date: typing.Optional[str] = None
+    name: str | None = None
+    avatar: str | None = None
+    quote: str | None = None
+    email: str | None = None
+    phone: str | None = None
+    active_products: int | None = 0
+    joined_date: str | None = None
 
 
 class FarmerDetailOutput(FarmerSummaryOutput):

@@ -13,9 +13,7 @@ class MessageBus(message_bus.AbstractMessageBus):
     def __init__(self) -> None:
         self._handlers: dict[type, list[typing.Callable[..., typing.Any]]] = {}
 
-    def register(
-        self, event_type: type, handler: typing.Callable[..., typing.Any]
-    ) -> None:
+    def register(self, event_type: type, handler: typing.Callable[..., typing.Any]) -> None:
         self._handlers.setdefault(event_type, []).append(handler)
 
     async def handle(self, event: events.DomainEvent) -> None:
@@ -24,7 +22,5 @@ class MessageBus(message_bus.AbstractMessageBus):
             try:
                 await handler(event)
             except Exception:
-                logger.exception(
-                    "Handler %s failed for event %s", handler, event.event_name
-                )
+                logger.exception("Handler %s failed for event %s", handler, event.event_name)
                 raise

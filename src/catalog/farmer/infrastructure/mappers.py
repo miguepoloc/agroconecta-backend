@@ -1,9 +1,9 @@
 """Data Mapper — Farmer ORM ↔ domain."""
 
-from src.shared_kernel.domain import value_objects as shared_value_objects
 from src.catalog.farmer.domain import aggregates as farmer_aggregates
 from src.catalog.farmer.domain import types, value_objects
 from src.catalog.farmer.infrastructure import models
+from src.shared_kernel.domain import value_objects as shared_value_objects
 
 
 def certification_orm_to_domain(

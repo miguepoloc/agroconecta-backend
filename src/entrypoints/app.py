@@ -3,20 +3,20 @@
 import fastapi
 import sqlalchemy.ext.asyncio
 
+from src.catalog.farmer.infrastructure.entrypoints import router as farmer_router
+from src.catalog.product.infrastructure.entrypoints import router as product_router
+from src.commerce.order.infrastructure.entrypoints import router as order_router
+from src.entrypoints import middleware
+from src.identity.user.infrastructure.entrypoints import router as auth_router
 from src.shared_kernel.infrastructure import config as app_config
-from src.shared_kernel.infrastructure.database import session as db_session
 from src.shared_kernel.infrastructure.adapters import (
-    postgres_refresh_token,
     postgres_event_publisher,
+    postgres_refresh_token,
     resend_email,
     stub_event_publisher,
     stub_refresh_token,
 )
-from src.entrypoints import middleware
-from src.identity.user.infrastructure.entrypoints import router as auth_router
-from src.catalog.farmer.infrastructure.entrypoints import router as farmer_router
-from src.catalog.product.infrastructure.entrypoints import router as product_router
-from src.commerce.order.infrastructure.entrypoints import router as order_router
+from src.shared_kernel.infrastructure.database import session as db_session
 
 _SessionFactory = sqlalchemy.ext.asyncio.async_sessionmaker[sqlalchemy.ext.asyncio.AsyncSession]
 
@@ -40,7 +40,9 @@ def _build_event_publisher(
 def _build_token_adapter(
     settings: app_config.Settings,
     session_factory: _SessionFactory,
-) -> postgres_refresh_token.PostgresRefreshTokenAdapter | stub_refresh_token.StubRefreshTokenAdapter:
+) -> (
+    postgres_refresh_token.PostgresRefreshTokenAdapter | stub_refresh_token.StubRefreshTokenAdapter
+):
     if settings.environment in ("staging", "production"):
         return postgres_refresh_token.PostgresRefreshTokenAdapter(
             session_factory=session_factory,

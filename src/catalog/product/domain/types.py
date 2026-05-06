@@ -3,7 +3,7 @@
 import enum
 
 
-class ProductCategory(str, enum.Enum):
+class ProductCategory(enum.StrEnum):
     FRUTAS = "frutas"
     VERDURAS = "verduras"
     TUBERCULOS = "tuberculos"
@@ -13,7 +13,7 @@ class ProductCategory(str, enum.Enum):
     OTROS = "otros"
 
 
-class ProductUnit(str, enum.Enum):
+class ProductUnit(enum.StrEnum):
     KG = "kg"
     UNIDAD = "unidad"
     LIBRA = "libra"

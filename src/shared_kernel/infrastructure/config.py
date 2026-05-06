@@ -24,6 +24,9 @@ class Settings(pydantic_settings.BaseSettings):
     resend_api_key: str = ""
     sender_email: str = "noreply@agroconecta.co"
 
+    aws_region: str = "us-east-1"
+    aws_endpoint_url: str = ""
+
     environment: typing.Literal["development", "staging", "production"] = "development"
     log_level: str = "INFO"
     cors_origins: str = "*"
@@ -34,4 +37,4 @@ class Settings(pydantic_settings.BaseSettings):
 
 
 def get_settings() -> Settings:
-    return Settings()  # type: ignore[call-arg]
+    return Settings()

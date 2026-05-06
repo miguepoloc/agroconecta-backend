@@ -1,7 +1,5 @@
 """Input DTOs for identity use cases."""
 
-import typing
-
 import pydantic
 
 from src.identity.user.domain import types
@@ -13,12 +11,12 @@ class RegisterInput(pydantic.BaseModel):
     password: str
     phone: str
     role: types.UserRole
-    region: typing.Optional[str] = None
-    department: typing.Optional[str] = None
-    bio: typing.Optional[str] = None
-    nit: typing.Optional[str] = None
-    institution_name: typing.Optional[str] = None
-    institution_type: typing.Optional[str] = None
+    region: str | None = None
+    department: str | None = None
+    bio: str | None = None
+    nit: str | None = None
+    institution_name: str | None = None
+    institution_type: str | None = None
 
 
 class LoginInput(pydantic.BaseModel):

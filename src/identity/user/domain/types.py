@@ -1,18 +1,16 @@
 """User domain enumerations."""
 
-from __future__ import annotations
-
 import enum
 
 
-class UserRole(str, enum.Enum):
+class UserRole(enum.StrEnum):
     COMPRADOR = "comprador"
     AGRICULTOR = "agricultor"
     INSTITUCION = "institucion"
     ADMIN = "admin"
 
 
-class UserStatus(str, enum.Enum):
+class UserStatus(enum.StrEnum):
     ACTIVE = "active"
     INACTIVE = "inactive"
     BLOCKED = "blocked"

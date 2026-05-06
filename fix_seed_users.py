@@ -1,14 +1,11 @@
-import re
-import uuid
-
-with open("scripts/seed_db.py", "r") as f:
+with open("scripts/seed_db.py") as f:
     content = f.read()
 
 # We need to find the user IDs and replace them with short IDs
 # User IDs are generated UUIDs, but we can just find them by looking at UserOrm instantiation
 # Actually, the easiest way is to just overwrite the entire file with a clean state
 
-clean_content = '''import asyncio
+clean_content = """import asyncio
 import time
 import bcrypt
 import uuid
@@ -18,7 +15,11 @@ from src.shared_kernel.infrastructure import config
 
 from src.identity.user.infrastructure.models import UserOrm
 from src.catalog.farmer.infrastructure.models import FarmerOrm, CertificationOrm
-from src.catalog.product.infrastructure.models import ProductOrm, VolumePriceOrm, TraceabilityStepOrm
+from src.catalog.product.infrastructure.models import (
+    ProductOrm,
+    VolumePriceOrm,
+    TraceabilityStepOrm,
+)
 
 now_us = int(time.time() * 1_000_000)
 password_hash = bcrypt.hashpw(b"demo123", bcrypt.gensalt()).decode()
@@ -109,7 +110,9 @@ PRODUCTS = [
         id=prod_1_id,
         slug="papa-criolla-boyaca",
         name="Papa Criolla Boyacá",
-        description="Papa criolla de primera calidad cultivada en las laderas del Valle de Tenza, Boyacá.",
+        description=(
+            "Papa criolla de primera calidad cultivada en las laderas del Valle de Tenza, Boyacá."
+        ),
         category="tuberculos",
         price="3200",
         institutional_price="2600",
@@ -212,7 +215,7 @@ async def seed():
 
 if __name__ == "__main__":
     asyncio.run(seed())
-'''
+"""
 
 with open("scripts/seed_db.py", "w") as f:
     f.write(clean_content)

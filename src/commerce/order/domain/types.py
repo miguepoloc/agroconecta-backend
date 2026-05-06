@@ -3,7 +3,7 @@
 import enum
 
 
-class OrderStatus(str, enum.Enum):
+class OrderStatus(enum.StrEnum):
     PENDING = "pendiente"
     CONFIRMED = "confirmado"
     IN_TRANSIT = "en_camino"
@@ -11,12 +11,12 @@ class OrderStatus(str, enum.Enum):
     CANCELLED = "cancelado"
 
 
-class OrderType(str, enum.Enum):
+class OrderType(enum.StrEnum):
     INDIVIDUAL = "individual"
     INSTITUTIONAL = "institucional"
 
 
-class PaymentMethod(str, enum.Enum):
+class PaymentMethod(enum.StrEnum):
     CARD = "tarjeta"
     PSE = "pse"
     NEQUI = "nequi"

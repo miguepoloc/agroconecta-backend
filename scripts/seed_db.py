@@ -1,14 +1,18 @@
 import asyncio
 import time
-import bcrypt
 import uuid
 
-from src.shared_kernel.infrastructure.database.session import build_engine, build_session_factory
-from src.shared_kernel.infrastructure import config
+import bcrypt
 
+from src.catalog.farmer.infrastructure.models import CertificationOrm, FarmerOrm
+from src.catalog.product.infrastructure.models import (
+    ProductOrm,
+    TraceabilityStepOrm,
+    VolumePriceOrm,
+)
 from src.identity.user.infrastructure.models import UserOrm
-from src.catalog.farmer.infrastructure.models import FarmerOrm, CertificationOrm
-from src.catalog.product.infrastructure.models import ProductOrm, VolumePriceOrm, TraceabilityStepOrm
+from src.shared_kernel.infrastructure import config
+from src.shared_kernel.infrastructure.database.session import build_engine, build_session_factory
 
 now_us = int(time.time() * 1_000_000)
 password_hash = bcrypt.hashpw(b"demo123", bcrypt.gensalt()).decode()
@@ -99,7 +103,9 @@ PRODUCTS = [
         id=prod_1_id,
         slug="papa-criolla-boyaca",
         name="Papa Criolla Boyacá",
-        description="Papa criolla de primera calidad cultivada en las laderas del Valle de Tenza, Boyacá.",
+        description=(
+            "Papa criolla de primera calidad cultivada en las laderas del Valle de Tenza, Boyacá."
+        ),
         category="tuberculos",
         price="3200",
         institutional_price="2600",
@@ -134,24 +140,16 @@ PRODUCTS = [
         featured=True,
         created_at=now_us,
         updated_at=now_us,
-    )
+    ),
 ]
 
 VOLUME_PRICES = [
     VolumePriceOrm(
-        id=str(uuid.uuid4()),
-        product_id=prod_1_id,
-        min_kg="1",
-        max_kg="9",
-        price_per_kg="3200"
+        id=str(uuid.uuid4()), product_id=prod_1_id, min_kg="1", max_kg="9", price_per_kg="3200"
     ),
     VolumePriceOrm(
-        id=str(uuid.uuid4()),
-        product_id=prod_1_id,
-        min_kg="10",
-        max_kg="49",
-        price_per_kg="2900"
-    )
+        id=str(uuid.uuid4()), product_id=prod_1_id, min_kg="10", max_kg="49", price_per_kg="2900"
+    ),
 ]
 
 TRACEABILITY_STEPS = [
@@ -162,9 +160,10 @@ TRACEABILITY_STEPS = [
         date=now_us - 86400 * 1_000_000 * 3,
         location="Valle de Tenza, Boyacá",
         responsible="Carlos Muñoz",
-        notes="Cosecha manual"
+        notes="Cosecha manual",
     )
 ]
+
 
 async def seed():
     settings = config.get_settings()
@@ -199,6 +198,7 @@ async def seed():
         print("Database seeded successfully!")
 
     await engine.dispose()
+
 
 if __name__ == "__main__":
     asyncio.run(seed())

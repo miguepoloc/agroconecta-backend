@@ -6,13 +6,13 @@ import decimal
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 
-from src.shared_kernel.infrastructure import config as app_config
-from src.shared_kernel.application.ports import event_publisher as event_publisher_port
 from src.catalog.product.infrastructure import models as product_models
 from src.commerce.order.application import unit_of_work as order_uow
 from src.commerce.order.application.dtos import inputs, outputs
-from src.commerce.order.domain import aggregates, exceptions, types, value_objects
+from src.commerce.order.domain import aggregates, exceptions, value_objects
 from src.identity.user.domain import types as user_types
+from src.shared_kernel.application.ports import event_publisher as event_publisher_port
+from src.shared_kernel.infrastructure import config as app_config
 
 
 def _build_order_output(order: aggregates.Order) -> outputs.OrderOutput:
@@ -55,7 +55,9 @@ def _resolve_unit_price(
     quantity: decimal.Decimal,
     is_institutional: bool,
 ) -> decimal.Decimal:
-    for vp in sorted(product.volume_prices, key=lambda v: decimal.Decimal(str(v.min_kg)), reverse=True):
+    for vp in sorted(
+        product.volume_prices, key=lambda v: decimal.Decimal(str(v.min_kg)), reverse=True
+    ):
         min_kg = decimal.Decimal(str(vp.min_kg))
         max_kg = decimal.Decimal(str(vp.max_kg)) if vp.max_kg else None
         if quantity >= min_kg and (max_kg is None or quantity <= max_kg):
@@ -95,7 +97,7 @@ async def handle_place_order(
             )
 
     async with order_uow.OrderUnitOfWork(session) as uow:
-        year = datetime.datetime.now(datetime.timezone.utc).year
+        year = datetime.datetime.now(datetime.UTC).year
         count = await uow.orders.count_by_year(year)
         order_number = f"AGC-{year}-{count + 1:05d}"
 

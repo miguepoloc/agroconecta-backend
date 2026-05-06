@@ -2,8 +2,6 @@
 
 import abc
 
-import pydantic
-
 from src.shared_kernel.domain import base_model
 
 

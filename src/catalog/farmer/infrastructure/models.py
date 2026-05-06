@@ -25,9 +25,7 @@ class FarmerOrm(base.Base):
     department: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(100), nullable=False
     )
-    bio: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
-        sqlalchemy.Text, nullable=True
-    )
+    bio: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.Text, nullable=True)
     total_sales: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.Numeric(15, 2), nullable=False, default="0"
     )
@@ -47,10 +45,8 @@ class FarmerOrm(base.Base):
         sqlalchemy.BigInteger, nullable=False
     )
 
-    certifications: sqlalchemy.orm.Mapped[list["CertificationOrm"]] = (
-        sqlalchemy.orm.relationship(
-            "CertificationOrm", back_populates="farmer", cascade="all, delete-orphan"
-        )
+    certifications: sqlalchemy.orm.Mapped[list["CertificationOrm"]] = sqlalchemy.orm.relationship(
+        "CertificationOrm", back_populates="farmer", cascade="all, delete-orphan"
     )
 
 

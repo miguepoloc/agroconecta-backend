@@ -4,9 +4,9 @@ import asyncio
 import logging
 import typing
 
+from src.notifications import user_events
 from src.shared_kernel.infrastructure import config as app_config
 from src.shared_kernel.infrastructure.adapters import ses as ses_adapter
-from src.notifications import user_events
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +28,7 @@ def handler(event: dict[str, typing.Any], context: typing.Any) -> None:
 
     settings = app_config.get_settings()
     email_svc = ses_adapter.SesEmailAdapter(
-        sender_email=settings.ses_sender_email,
+        sender_email=settings.sender_email,
         region=settings.aws_region,
         endpoint_url=settings.aws_endpoint_url or None,
     )

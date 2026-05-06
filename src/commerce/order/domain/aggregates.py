@@ -3,9 +3,8 @@
 import datetime
 import decimal
 
-from src.shared_kernel.domain import aggregates, value_objects as shared_vos
 from src.commerce.order.domain import events, exceptions, types, value_objects
-
+from src.shared_kernel.domain import aggregates
 
 _FREE_DELIVERY_THRESHOLD = decimal.Decimal("200000")
 _DELIVERY_FEE = decimal.Decimal("15000")
@@ -39,7 +38,9 @@ class Order(aggregates.BaseAggregateRoot):
     ) -> "Order":
         subtotal = sum((item.subtotal for item in items), decimal.Decimal("0"))
         is_institutional = buyer_role == "institucion"
-        order_type = types.OrderType.INSTITUTIONAL if is_institutional else types.OrderType.INDIVIDUAL
+        order_type = (
+            types.OrderType.INSTITUTIONAL if is_institutional else types.OrderType.INDIVIDUAL
+        )
         delivery_fee = (
             decimal.Decimal("0")
             if is_institutional or subtotal >= _FREE_DELIVERY_THRESHOLD
@@ -74,9 +75,7 @@ class Order(aggregates.BaseAggregateRoot):
 
     def change_status(self, new_status: types.OrderStatus) -> None:
         if not types.is_valid_transition(self.status, new_status):
-            raise exceptions.InvalidStatusTransitionError(
-                self.status.value, new_status.value
-            )
+            raise exceptions.InvalidStatusTransitionError(self.status.value, new_status.value)
         previous = self.status
         self.status = new_status
         self.touch()

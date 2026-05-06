@@ -1,7 +1,6 @@
 """Value objects for the User domain."""
 
 import re
-import typing
 
 import pydantic
 
@@ -10,7 +9,7 @@ from src.shared_kernel.domain import value_objects
 
 class UserId(value_objects.HumanFriendlyId):
     @classmethod
-    def generate(cls, length: int = 10) -> "UserId":  # type: ignore[override]
+    def generate(cls, length: int = 10) -> "UserId":
         base = value_objects.HumanFriendlyId.generate(length=length)
         return cls(value=base.value)
 
@@ -70,4 +69,3 @@ class PasswordHash(value_objects.BaseValueObject):
 
     def __str__(self) -> str:
         return "***"
-

@@ -4,16 +4,17 @@ import typing
 
 import sqlalchemy.ext.asyncio
 
-from src.shared_kernel.infrastructure import config as app_config
-from src.shared_kernel.application.ports import event_publisher as event_publisher_port
 from src.identity.user.application import unit_of_work as user_uow
 from src.identity.user.application.dtos import inputs, outputs
-from src.identity.user.domain import exceptions as user_exceptions
-from src.identity.user.domain import types, value_objects as user_value_objects
 from src.identity.user.domain import aggregates as user_aggregates
+from src.identity.user.domain import exceptions as user_exceptions
+from src.identity.user.domain import types
+from src.identity.user.domain import value_objects as user_value_objects
 from src.identity.user.infrastructure import mappers, models
 from src.identity.user.infrastructure.adapters import jwt as jwt_adapter
 from src.identity.user.infrastructure.adapters import password as password_adapter
+from src.shared_kernel.application.ports import event_publisher as event_publisher_port
+from src.shared_kernel.infrastructure import config as app_config
 
 # Type alias for refresh token adapters (DynamoRefreshTokenAdapter or StubRefreshTokenAdapter)
 RefreshTokenAdapter = typing.Any
@@ -54,9 +55,7 @@ async def handle_register(
     token_adapter: RefreshTokenAdapter,
 ) -> outputs.AuthOutput:
     async with user_uow.UserUnitOfWork(session) as uow:
-        existing = await uow.users.find_by_email(
-            user_value_objects.Email(value=command.email)
-        )
+        existing = await uow.users.find_by_email(user_value_objects.Email(value=command.email))
         if existing is not None:
             raise user_exceptions.EmailAlreadyExistsError(command.email)
 
@@ -101,9 +100,7 @@ async def handle_login(
     token_adapter: RefreshTokenAdapter,
 ) -> outputs.AuthOutput:
     async with user_uow.UserUnitOfWork(session) as uow:
-        user = await uow.users.find_by_email(
-            user_value_objects.Email(value=command.email)
-        )
+        user = await uow.users.find_by_email(user_value_objects.Email(value=command.email))
         if user is None:
             raise user_exceptions.InvalidCredentialsError()
         if not user.is_active():

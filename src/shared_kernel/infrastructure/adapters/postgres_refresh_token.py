@@ -29,7 +29,7 @@ class PostgresRefreshTokenAdapter:
             session.add(record)
             await session.commit()
 
-    async def find_by_hash(self, token_hash: str) -> typing.Optional[dict[str, typing.Any]]:
+    async def find_by_hash(self, token_hash: str) -> dict[str, typing.Any] | None:
         async with self._session_factory() as session:
             result = await session.get(models.RefreshTokenOrm, token_hash)
             if result is None:

@@ -18,18 +18,14 @@ class DynamoStack(aws_cdk.Stack):
             self,
             "RefreshTokensTable",
             table_name="agroconecta-refresh-tokens",
-            partition_key=dynamodb.Attribute(
-                name="token_hash", type=dynamodb.AttributeType.STRING
-            ),
+            partition_key=dynamodb.Attribute(name="token_hash", type=dynamodb.AttributeType.STRING),
             time_to_live_attribute="expires_at",
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=aws_cdk.RemovalPolicy.RETAIN,
         )
         self.refresh_tokens_table.add_global_secondary_index(
             index_name="by-user-id",
-            partition_key=dynamodb.Attribute(
-                name="user_id", type=dynamodb.AttributeType.STRING
-            ),
+            partition_key=dynamodb.Attribute(name="user_id", type=dynamodb.AttributeType.STRING),
             projection_type=dynamodb.ProjectionType.KEYS_ONLY,
         )
 
@@ -37,9 +33,7 @@ class DynamoStack(aws_cdk.Stack):
             self,
             "RateLimitsTable",
             table_name="agroconecta-rate-limits",
-            partition_key=dynamodb.Attribute(
-                name="key", type=dynamodb.AttributeType.STRING
-            ),
+            partition_key=dynamodb.Attribute(name="key", type=dynamodb.AttributeType.STRING),
             time_to_live_attribute="expires_at",
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=aws_cdk.RemovalPolicy.DESTROY,
@@ -52,19 +46,13 @@ class DynamoStack(aws_cdk.Stack):
             partition_key=dynamodb.Attribute(
                 name="aggregate_id", type=dynamodb.AttributeType.STRING
             ),
-            sort_key=dynamodb.Attribute(
-                name="occurred_on", type=dynamodb.AttributeType.STRING
-            ),
+            sort_key=dynamodb.Attribute(name="occurred_on", type=dynamodb.AttributeType.STRING),
             billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
             removal_policy=aws_cdk.RemovalPolicy.RETAIN,
         )
         self.events_log_table.add_global_secondary_index(
             index_name="by-event-type",
-            partition_key=dynamodb.Attribute(
-                name="event_type", type=dynamodb.AttributeType.STRING
-            ),
-            sort_key=dynamodb.Attribute(
-                name="occurred_on", type=dynamodb.AttributeType.STRING
-            ),
+            partition_key=dynamodb.Attribute(name="event_type", type=dynamodb.AttributeType.STRING),
+            sort_key=dynamodb.Attribute(name="occurred_on", type=dynamodb.AttributeType.STRING),
             projection_type=dynamodb.ProjectionType.ALL,
         )

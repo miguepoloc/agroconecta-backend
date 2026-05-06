@@ -6,13 +6,10 @@ import typing
 from src.shared_kernel.domain import entities, value_objects
 
 T = typing.TypeVar("T", bound=entities.BaseEntity)
-V = typing.TypeVar("V", bound=value_objects.DomainId)
 
 
 class Page(typing.Generic[T]):
-    def __init__(
-        self, items: list[T], next_page_token: typing.Optional[str] = None
-    ) -> None:
+    def __init__(self, items: list[T], next_page_token: str | None = None) -> None:
         self.items = items
         self.next_page_token = next_page_token
 
@@ -27,9 +24,7 @@ class Repository(abc.ABC, typing.Generic[T]):
         raise NotImplementedError
 
     @abc.abstractmethod
-    async def find_by_id(
-        self, id: value_objects.DomainId
-    ) -> typing.Optional[T]:
+    async def find_by_id(self, id: value_objects.DomainId) -> T | None:
         raise NotImplementedError
 
     async def find_by_ids(
@@ -40,6 +35,6 @@ class Repository(abc.ABC, typing.Generic[T]):
     async def find_all(
         self,
         page_size: int = 20,
-        next_page_token: typing.Optional[str] = None,
+        next_page_token: str | None = None,
     ) -> "Page[T]":
         raise NotImplementedError

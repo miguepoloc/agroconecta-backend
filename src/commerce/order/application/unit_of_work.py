@@ -2,9 +2,9 @@
 
 import sqlalchemy.ext.asyncio
 
-from src.shared_kernel.infrastructure import uow
 from src.commerce.order.domain import repositories as order_repos
 from src.commerce.order.infrastructure import repositories as order_infra_repos
+from src.shared_kernel.infrastructure import uow
 
 
 class OrderUnitOfWork(uow.FastAPIUnitOfWork):
@@ -14,5 +14,5 @@ class OrderUnitOfWork(uow.FastAPIUnitOfWork):
         super().__init__(session)
         self.orders = order_infra_repos.SqlAlchemyOrderRepository(session)
 
-    def _repositories(self) -> list[order_repos.OrderRepository]:
+    def _repositories(self) -> list[order_repos.OrderRepository]:  # type: ignore[override]
         return [self.orders]

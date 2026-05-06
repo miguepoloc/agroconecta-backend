@@ -5,11 +5,11 @@ import uuid
 
 import sqlalchemy.ext.asyncio
 
+from src.notifications import user_events
 from src.shared_kernel.application.ports import email_service as email_port
 from src.shared_kernel.application.ports import event_publisher as event_publisher_port
 from src.shared_kernel.domain import events
 from src.shared_kernel.infrastructure.database import models
-from src.notifications import user_events
 
 
 class PostgresEventPublisher(event_publisher_port.AbstractEventPublisher):
@@ -41,6 +41,7 @@ class PostgresEventPublisher(event_publisher_port.AbstractEventPublisher):
 
     async def _dispatch(self, event: events.DomainEvent) -> None:
         import logging
+
         logger = logging.getLogger(__name__)
         event_type = type(event).__name__
         try:

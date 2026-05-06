@@ -1,7 +1,6 @@
 import uuid
-import re
 
-with open("scripts/seed_db.py", "r") as f:
+with open("scripts/seed_db.py") as f:
     content = f.read()
 
 ids_to_replace = {

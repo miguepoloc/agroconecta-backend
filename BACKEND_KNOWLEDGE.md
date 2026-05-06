@@ -196,7 +196,7 @@ Un `User` con `role = "agricultor"` tiene asociado un perfil `Farmer`:
   updatedAt: datetime
   purchaseOrderNumber?: string // solo tipo "institucional"
   institutionId?: string       // solo tipo "institucional"
-  
+
   // Dirección de entrega (embebida o tabla separada)
   deliveryStreet: string
   deliveryCity: string

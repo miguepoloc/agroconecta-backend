@@ -4,10 +4,10 @@ import typing
 
 import fastapi
 
-from src.shared_kernel.infrastructure import config as app_config
 from src.identity.user.application.dtos import inputs, outputs
 from src.identity.user.application.handlers import commands
 from src.identity.user.domain import aggregates as user_aggregates
+from src.shared_kernel.infrastructure import config as app_config
 
 router = fastapi.APIRouter(prefix="/auth", tags=["auth"])
 

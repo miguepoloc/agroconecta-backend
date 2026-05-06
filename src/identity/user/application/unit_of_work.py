@@ -2,9 +2,9 @@
 
 import sqlalchemy.ext.asyncio
 
-from src.shared_kernel.infrastructure import uow
 from src.identity.user.domain import repositories as user_repos
 from src.identity.user.infrastructure import repositories as user_infra_repos
+from src.shared_kernel.infrastructure import uow
 
 
 class UserUnitOfWork(uow.FastAPIUnitOfWork):

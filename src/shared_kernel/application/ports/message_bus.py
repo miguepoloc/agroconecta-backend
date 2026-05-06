@@ -12,7 +12,5 @@ class AbstractMessageBus(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def register(
-        self, event_type: type, handler: typing.Callable[..., typing.Any]
-    ) -> None:
+    def register(self, event_type: type, handler: typing.Callable[..., typing.Any]) -> None:
         raise NotImplementedError

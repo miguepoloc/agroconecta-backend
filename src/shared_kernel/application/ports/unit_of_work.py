@@ -8,13 +8,13 @@ from src.shared_kernel.domain import events
 
 
 class AbstractUnitOfWork(abc.ABC):
-    async def __aenter__(self) -> "AbstractUnitOfWork":
+    async def __aenter__(self) -> typing.Self:
         return self
 
     async def __aexit__(
         self,
-        exc_type: typing.Optional[type[BaseException]],
-        exc_val: typing.Optional[BaseException],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
         exc_tb: object,
     ) -> None:
         if exc_type is not None:
@@ -33,7 +33,7 @@ class AbstractUnitOfWork(abc.ABC):
     ) -> typing.Generator[events.DomainEvent, None, None]:
         for repo in self._repositories():
             if hasattr(repo, "_seen"):
-                for aggregate in repo._seen:  # type: ignore[attr-defined]
+                for aggregate in repo._seen:
                     yield from aggregate.pull_events()
 
     def _repositories(self) -> list[repositories.Repository]:  # type: ignore[type-arg]

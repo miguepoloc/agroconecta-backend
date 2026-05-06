@@ -24,7 +24,7 @@ class DatabaseStack(aws_cdk.Stack):
             generate_secret_string=secretsmanager.SecretStringGenerator(
                 secret_string_template='{"username": "agroconecta"}',
                 generate_string_key="password",
-                exclude_characters="\"@/\\",
+                exclude_characters='"@/\\',
             ),
         )
 
@@ -39,16 +39,10 @@ class DatabaseStack(aws_cdk.Stack):
         self.cluster = rds.DatabaseInstance(
             self,
             "AgroConectaDb",
-            engine=rds.DatabaseInstanceEngine.postgres(
-                version=rds.PostgresEngineVersion.VER_16
-            ),
-            instance_type=ec2.InstanceType.of(
-                ec2.InstanceClass.T4G, ec2.InstanceSize.MICRO
-            ),
+            engine=rds.DatabaseInstanceEngine.postgres(version=rds.PostgresEngineVersion.VER_16),
+            instance_type=ec2.InstanceType.of(ec2.InstanceClass.T4G, ec2.InstanceSize.MICRO),
             vpc=vpc,
-            vpc_subnets=ec2.SubnetSelection(
-                subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS
-            ),
+            vpc_subnets=ec2.SubnetSelection(subnet_type=ec2.SubnetType.PRIVATE_WITH_EGRESS),
             security_groups=[self.db_security_group],
             credentials=rds.Credentials.from_secret(self.db_secret),
             database_name="agroconecta",

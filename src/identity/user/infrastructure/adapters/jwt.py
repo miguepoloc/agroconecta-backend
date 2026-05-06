@@ -27,16 +27,19 @@ def create_access_token(
         "exp": int(expire),
         "jti": str(uuid.uuid4()),
     }
-    return jose.jwt.encode(payload, secret_key, algorithm=algorithm)
+    return str(jose.jwt.encode(payload, secret_key, algorithm=algorithm))
 
 
 def decode_access_token(
     token: str,
     secret_key: str,
     algorithm: str,
-) -> typing.Optional[dict[str, typing.Any]]:
+) -> dict[str, typing.Any] | None:
     try:
-        return jose.jwt.decode(token, secret_key, algorithms=[algorithm])
+        return typing.cast(
+            dict[str, typing.Any],
+            jose.jwt.decode(token, secret_key, algorithms=[algorithm]),
+        )
     except jose.jwt.ExpiredSignatureError:
         return None
     except jose.jwt.JWTError:

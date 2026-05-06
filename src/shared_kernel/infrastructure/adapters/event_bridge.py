@@ -15,7 +15,7 @@ class EventBridgePublisher(event_publisher.AbstractEventPublisher):
         bus_name: str,
         source: str = "agroconecta.backend",
         region: str = "us-east-1",
-        endpoint_url: typing.Optional[str] = None,
+        endpoint_url: str | None = None,
     ) -> None:
         self._bus_name = bus_name
         self._source = source

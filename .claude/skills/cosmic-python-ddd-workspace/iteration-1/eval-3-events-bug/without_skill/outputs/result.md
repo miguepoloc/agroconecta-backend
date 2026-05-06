@@ -14,11 +14,11 @@ Al registrar un usuario, el flujo debe garantizar que el evento `UserRegistered`
 async with uow:
     user = User.register(...)
     uow.repo.put(user)
-    
+
     # MAL: publicando ANTES del commit
     events = uow.collect_new_events()
     publish(events)
-    
+
     await uow.commit()
 ```
 

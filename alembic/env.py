@@ -8,17 +8,17 @@ sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 from logging.config import fileConfig
 
 import sqlalchemy
-from alembic import context
 
+from alembic import context
+from src.catalog.farmer.infrastructure import models as farmer_models  # noqa: F401
+from src.catalog.product.infrastructure import models as product_models  # noqa: F401
+from src.commerce.order.infrastructure import models as order_models  # noqa: F401
+from src.identity.user.infrastructure import models as user_models  # noqa: F401
 from src.shared_kernel.infrastructure import config as app_config
 from src.shared_kernel.infrastructure.database import base
 
 # Import all ORM models so Alembic can detect them
 from src.shared_kernel.infrastructure.database import models as shared_models  # noqa: F401
-from src.identity.user.infrastructure import models as user_models  # noqa: F401
-from src.catalog.farmer.infrastructure import models as farmer_models  # noqa: F401
-from src.catalog.product.infrastructure import models as product_models  # noqa: F401
-from src.commerce.order.infrastructure import models as order_models  # noqa: F401
 
 config = context.config
 if config.config_file_name is not None:

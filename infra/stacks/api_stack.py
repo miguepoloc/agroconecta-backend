@@ -94,9 +94,7 @@ class ApiStack(aws_cdk.Stack):
             ),
         )
 
-        integration = apigw_integrations.HttpLambdaIntegration(
-            "LambdaIntegration", self.function
-        )
+        integration = apigw_integrations.HttpLambdaIntegration("LambdaIntegration", self.function)
         http_api.add_routes(
             path="/{proxy+}",
             methods=[apigw.HttpMethod.ANY],

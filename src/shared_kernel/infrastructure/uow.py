@@ -17,16 +17,16 @@ class SqlAlchemyUnitOfWork(unit_of_work.AbstractUnitOfWork):
         ],
     ) -> None:
         self._session_factory = session_factory
-        self._session: typing.Optional[sqlalchemy.ext.asyncio.AsyncSession] = None
+        self._session: sqlalchemy.ext.asyncio.AsyncSession | None = None
 
-    async def __aenter__(self) -> "SqlAlchemyUnitOfWork":
+    async def __aenter__(self) -> typing.Self:
         self._session = self._session_factory()
         return self
 
     async def __aexit__(
         self,
-        exc_type: typing.Optional[type[BaseException]],
-        exc_val: typing.Optional[BaseException],
+        exc_type: type[BaseException] | None,
+        exc_val: BaseException | None,
         exc_tb: object,
     ) -> None:
         await super().__aexit__(exc_type, exc_val, exc_tb)
@@ -53,7 +53,7 @@ class FastAPIUnitOfWork(unit_of_work.AbstractUnitOfWork):
     def __init__(self, session: sqlalchemy.ext.asyncio.AsyncSession) -> None:
         self._session = session
 
-    async def __aenter__(self) -> "FastAPIUnitOfWork":
+    async def __aenter__(self) -> typing.Self:
         return self
 
     @property

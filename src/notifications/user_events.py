@@ -16,7 +16,10 @@ async def handle_user_registered(
             to=email,
             subject="Bienvenido a AgroConecta",
             html_body=_welcome_html(first_name),
-            text_body=f"Hola {first_name}, bienvenido a AgroConecta. Tu cuenta ha sido creada exitosamente.",
+            text_body=(
+                f"Hola {first_name}, bienvenido a AgroConecta. "
+                "Tu cuenta ha sido creada exitosamente."
+            ),
         )
     )
 

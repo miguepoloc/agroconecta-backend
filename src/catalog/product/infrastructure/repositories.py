@@ -1,15 +1,13 @@
 """SQLAlchemy implementation of ProductRepository."""
 
-import typing
-
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 import sqlalchemy.orm
 
-from src.shared_kernel.domain import value_objects as shared_value_objects
 from src.catalog.product.domain import aggregates as product_aggregates
 from src.catalog.product.domain import repositories as product_repos
 from src.catalog.product.infrastructure import mappers, models
+from src.shared_kernel.domain import value_objects as shared_value_objects
 
 
 class SqlAlchemyProductRepository(product_repos.ProductRepository):
@@ -30,7 +28,7 @@ class SqlAlchemyProductRepository(product_repos.ProductRepository):
 
     async def find_by_id(
         self, id: shared_value_objects.DomainId
-    ) -> typing.Optional[product_aggregates.Product]:
+    ) -> product_aggregates.Product | None:
         stmt = self._base_stmt().where(models.ProductOrm.id == str(id))
         result = await self._session.execute(stmt)
         orm = result.scalar_one_or_none()
@@ -40,9 +38,7 @@ class SqlAlchemyProductRepository(product_repos.ProductRepository):
         self._seen.add(product)
         return product
 
-    async def find_by_slug(
-        self, slug: str
-    ) -> typing.Optional[product_aggregates.Product]:
+    async def find_by_slug(self, slug: str) -> product_aggregates.Product | None:
         stmt = self._base_stmt().where(models.ProductOrm.slug == slug)
         result = await self._session.execute(stmt)
         orm = result.scalar_one_or_none()
@@ -50,12 +46,8 @@ class SqlAlchemyProductRepository(product_repos.ProductRepository):
             return None
         return mappers.orm_to_domain(orm)
 
-    async def find_by_lot_number(
-        self, lot_number: str
-    ) -> typing.Optional[product_aggregates.Product]:
-        stmt = self._base_stmt().where(
-            models.ProductOrm.lot_number == lot_number.upper()
-        )
+    async def find_by_lot_number(self, lot_number: str) -> product_aggregates.Product | None:
+        stmt = self._base_stmt().where(models.ProductOrm.lot_number == lot_number.upper())
         result = await self._session.execute(stmt)
         orm = result.scalar_one_or_none()
         if orm is None:
@@ -74,10 +66,10 @@ class SqlAlchemyProductRepository(product_repos.ProductRepository):
 
     async def find_all_filtered(
         self,
-        category: typing.Optional[str] = None,
-        certification: typing.Optional[str] = None,
-        in_stock: typing.Optional[bool] = None,
-        farmer_id: typing.Optional[str] = None,
+        category: str | None = None,
+        certification: str | None = None,
+        in_stock: bool | None = None,
+        farmer_id: str | None = None,
         sort_by: str = "created_at",
         page_size: int = 20,
         offset: int = 0,

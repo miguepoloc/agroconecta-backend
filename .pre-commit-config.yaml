@@ -3,6 +3,12 @@
 #
 # All Python hooks use `uv run` (language: system) so they share the
 # project's own virtualenv — no duplicate installs, same versions as uv.lock.
+#
+# Install all hook types:
+#   pre-commit install --hook-type pre-commit --hook-type commit-msg
+
+# Exclude third-party directories that are not project code
+exclude: ^(\.agents/|\.claude/skills/)
 
 repos:
   # ── Generic file hygiene ───────────────────────────────────────────────────
@@ -15,7 +21,8 @@ repos:
       - id: check-toml                   # Validate pyproject.toml and friends
       - id: check-yaml                   # Validate YAML (workflows, CDK, etc.)
         args: ["--unsafe"]
-      - id: check-json                   # Validate JSON files
+      - id: check-json                   # Validate JSON files (exclude JSONC with comments)
+        exclude: tsconfig.*\.json$
       - id: check-ast                    # Check Python files parse correctly
       - id: check-merge-conflict         # Reject leftover merge-conflict markers
       - id: detect-private-key           # Block accidental secret commits
@@ -25,7 +32,7 @@ repos:
       - id: mixed-line-ending            # Normalize to LF
         args: ["--fix=lf"]
 
-  # ── Python linting & formatting (Ruff via uv) ──────────────────────────────
+  # ── Python linting, formatting & type checking (via uv) ───────────────────
   - repo: local
     hooks:
       - id: ruff-check
@@ -42,19 +49,15 @@ repos:
         types: [python]
         require_serial: true
 
-  # ── Static type checking (MyPy via uv) ────────────────────────────────────
-  - repo: local
-    hooks:
       - id: mypy
         name: mypy (type check)
-        entry: uv run mypy backend/src --config-file backend/pyproject.toml
+        entry: uv run mypy src
         language: system
         types: [python]
         pass_filenames: false
         require_serial: true
 
   # ── Conventional Commits enforcement (commit-msg stage) ───────────────────
-  # Install with: pre-commit install --hook-type commit-msg
   # Usage: git commit -m "feat(users): add profile endpoint"
   # Bump version + changelog: uv run cz bump
   - repo: https://github.com/commitizen-tools/commitizen

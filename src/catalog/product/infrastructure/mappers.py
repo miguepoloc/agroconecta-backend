@@ -2,10 +2,10 @@
 
 from decimal import Decimal
 
-from src.shared_kernel.domain import value_objects as shared_value_objects
 from src.catalog.product.domain import aggregates as product_aggregates
 from src.catalog.product.domain import types, value_objects
 from src.catalog.product.infrastructure import models
+from src.shared_kernel.domain import value_objects as shared_value_objects
 
 
 def volume_price_orm_to_domain(orm: models.VolumePriceOrm) -> product_aggregates.VolumePrice:
@@ -49,9 +49,7 @@ def orm_to_domain(orm: models.ProductOrm) -> product_aggregates.Product:
         in_stock=orm.in_stock,
         featured=orm.featured,
         volume_prices=[volume_price_orm_to_domain(vp) for vp in orm.volume_prices],
-        traceability_chain=[
-            traceability_step_orm_to_domain(ts) for ts in orm.traceability_steps
-        ],
+        traceability_chain=[traceability_step_orm_to_domain(ts) for ts in orm.traceability_steps],
         version=orm.version,
         created_at=shared_value_objects.PosixTime(microseconds=orm.created_at),
         updated_at=shared_value_objects.PosixTime(microseconds=orm.updated_at),

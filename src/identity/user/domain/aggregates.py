@@ -1,8 +1,8 @@
 """User aggregate root."""
 
-from src.shared_kernel.domain import aggregates
 from src.identity.user.domain import events as user_events
 from src.identity.user.domain import types, value_objects
+from src.shared_kernel.domain import aggregates
 
 
 class User(aggregates.BaseAggregateRoot):
@@ -27,9 +27,7 @@ class User(aggregates.BaseAggregateRoot):
         user = cls(
             id=value_objects.UserId.generate(),
             email=email,
-            personal_name=value_objects.PersonalName(
-                first_name=first_name, last_name=last_name
-            ),
+            personal_name=value_objects.PersonalName(first_name=first_name, last_name=last_name),
             phone=phone,
             password_hash=password_hash,
             role=role,
@@ -50,7 +48,9 @@ class User(aggregates.BaseAggregateRoot):
     def change_password(self, new_password_hash: value_objects.PasswordHash) -> None:
         self.password_hash = new_password_hash
         self.touch()
-        self.record_event(user_events.UserPasswordChanged(aggregate_id=str(self.id), user_id=str(self.id)))
+        self.record_event(
+            user_events.UserPasswordChanged(aggregate_id=str(self.id), user_id=str(self.id))
+        )
 
     def block(self) -> None:
         self.status = types.UserStatus.BLOCKED

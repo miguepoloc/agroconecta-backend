@@ -22,10 +22,8 @@ async def list_featured_products(
 @router.get("/products", response_model=list[outputs.ProductSummaryOutput])
 async def list_products(
     request: fastapi.Request,
-    category: typing.Annotated[typing.Optional[str], fastapi.Query()] = None,
-    in_stock: typing.Annotated[
-        typing.Optional[bool], fastapi.Query()
-    ] = None,
+    category: typing.Annotated[str | None, fastapi.Query()] = None,
+    in_stock: typing.Annotated[bool | None, fastapi.Query()] = None,
     sort_by: typing.Annotated[str, fastapi.Query()] = "created_at",
     page_size: typing.Annotated[int, fastapi.Query(ge=1, le=100)] = 20,
     offset: typing.Annotated[int, fastapi.Query(ge=0)] = 0,

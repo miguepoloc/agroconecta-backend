@@ -14,7 +14,7 @@ class SesEmailAdapter(email_service.AbstractEmailService):
         self,
         sender_email: str,
         region: str = "us-east-1",
-        endpoint_url: typing.Optional[str] = None,
+        endpoint_url: str | None = None,
     ) -> None:
         self._sender = sender_email
         kwargs: dict[str, typing.Any] = {"region_name": region}

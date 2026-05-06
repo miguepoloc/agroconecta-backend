@@ -1,12 +1,10 @@
 """Order API router — /api/v1/orders and /api/v1/admin/orders."""
 
-import typing
-
 import fastapi
 
-from src.entrypoints import dependencies
 from src.commerce.order.application.dtos import inputs, outputs
 from src.commerce.order.application.handlers import commands, queries
+from src.entrypoints import dependencies
 from src.identity.user.domain import types as user_types
 
 router = fastapi.APIRouter(prefix="/orders", tags=["orders"])
@@ -20,6 +18,7 @@ async def place_order(
     current_user: dependencies.CurrentUser,
 ) -> outputs.OrderOutput:
     from src.shared_kernel.infrastructure import config as app_config
+
     settings = app_config.get_settings()
     return await commands.handle_place_order(
         command=body,
@@ -64,8 +63,8 @@ async def get_order(
 async def admin_list_orders(
     request: fastapi.Request,
     current_user: dependencies.CurrentUser,
-    status: typing.Optional[str] = fastapi.Query(None),
-    order_type: typing.Optional[str] = fastapi.Query(None),
+    status: str | None = fastapi.Query(None),
+    order_type: str | None = fastapi.Query(None),
     limit: int = fastapi.Query(20, ge=1, le=100),
     offset: int = fastapi.Query(0, ge=0),
 ) -> list[outputs.OrderSummaryOutput]:

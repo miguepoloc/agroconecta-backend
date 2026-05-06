@@ -44,19 +44,34 @@ target-version = "py312"
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "N", "UP", "ANN", "S", "B", "A"]
-ignore = ["ANN101", "ANN102", "ANN401"]
+ignore = [
+    "ANN401",
+    "A002",   # `id` shadowing builtin is idiomatic in DDD repositories
+    "N818",   # DomainException naming is intentional (not Error suffix)
+    "UP046",  # Generic[T] subclass syntax — migration would break subclass hierarchy
+]
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**/*.py" = ["S101", "ANN"]
+"scripts/**/*.py" = ["ANN", "N806", "S101"]
+"fix_seed_users.py" = ["ANN", "N806"]
+"test_error.py" = ["ANN", "N806"]
+# CDK constructs use `secret_name` as a resource identifier, not a credential
+"infra/**/*.py" = ["S106", "ANN"]
+# "bearer" is a protocol constant, not a hardcoded credential
+"src/identity/user/application/dtos/outputs.py" = ["S105"]
 
 [tool.mypy]
 python_version = "3.12"
 strict = true
 plugins = ["pydantic.mypy", "sqlalchemy.ext.mypy.plugin"]
 
+[[tool.mypy.overrides]]
+# Third-party packages without type stubs available
+module = ["mangum", "boto3.*", "aioboto3.*", "botocore.*", "jose.*"]
+ignore_missing_imports = true
+
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
 pythonpath = ["."]
-
-

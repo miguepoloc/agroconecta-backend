@@ -1,12 +1,11 @@
 """Output DTOs for the product context."""
 
-import typing
 from decimal import Decimal
 
 import pydantic
 
-from src.catalog.product.domain import types
 from src.catalog.farmer.application.dtos import outputs as farmer_outputs
+from src.catalog.product.domain import types
 
 
 class VolumePriceOutput(pydantic.BaseModel):
@@ -23,7 +22,7 @@ class TraceabilityStepOutput(pydantic.BaseModel):
     date: str
     location: str
     responsible: str
-    notes: typing.Optional[str] = None
+    notes: str | None = None
 
 
 class ProductSummaryOutput(pydantic.BaseModel):
@@ -45,7 +44,7 @@ class ProductSummaryOutput(pydantic.BaseModel):
 
 
 class ProductDetailOutput(ProductSummaryOutput):
-    description: typing.Optional[str]
-    farmer: typing.Optional[farmer_outputs.FarmerSummaryOutput] = None
+    description: str | None
+    farmer: farmer_outputs.FarmerSummaryOutput | None = None
     volume_prices: list[VolumePriceOutput]
     traceability_chain: list[TraceabilityStepOutput]

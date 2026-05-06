@@ -1,11 +1,11 @@
 """Core value objects for the shared kernel."""
 
-import random
+import datetime
+import decimal
+import secrets
 import string
 import typing
 import uuid
-import datetime
-import decimal 
 
 import pydantic
 
@@ -22,7 +22,6 @@ class BaseValueObject(base_model.DomainModel):
 
     def __hash__(self) -> int:
         return hash(tuple(sorted(self.model_dump().items())))
-
 
 
 class DomainId(BaseValueObject):
@@ -51,7 +50,7 @@ class HumanFriendlyId(DomainId):
     @classmethod
     def generate(cls, length: int = 10) -> "HumanFriendlyId":
         chars = string.ascii_uppercase + string.digits
-        return cls(value="".join(random.choices(chars, k=length))) 
+        return cls(value="".join(secrets.choice(chars) for _ in range(length)))
 
 
 class NumericId(BaseValueObject):
@@ -116,7 +115,7 @@ class Money(BaseValueObject):
         return decimal.Decimal(str(v))
 
     @classmethod
-    def cop(cls, amount: typing.Union[decimal.Decimal, int, str]) -> "Money":
+    def cop(cls, amount: decimal.Decimal | int | str) -> "Money":
         return cls(amount=decimal.Decimal(str(amount)), currency="COP")
 
     @classmethod
@@ -133,7 +132,7 @@ class Money(BaseValueObject):
             raise ValueError(f"Cannot subtract {self.currency} and {other.currency}")
         return Money(amount=self.amount - other.amount, currency=self.currency)
 
-    def multiply(self, factor: typing.Union[decimal.Decimal, int, str]) -> "Money":
+    def multiply(self, factor: decimal.Decimal | int | str) -> "Money":
         result = self.amount * decimal.Decimal(str(factor))
         return Money(
             amount=result.quantize(decimal.Decimal("1"), rounding=decimal.ROUND_HALF_UP),

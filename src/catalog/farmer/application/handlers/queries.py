@@ -1,7 +1,5 @@
 """Query handlers for the farmer context."""
 
-import typing
-
 import sqlalchemy.ext.asyncio
 
 from src.catalog.farmer.application.dtos import outputs
@@ -36,8 +34,8 @@ def _to_output(farmer: farmer_aggregates.Farmer) -> outputs.FarmerSummaryOutput:
 
 async def handle_list_farmers(
     session: sqlalchemy.ext.asyncio.AsyncSession,
-    compliance_status: typing.Optional[types.ComplianceStatus] = None,
-    rank: typing.Optional[types.SustainabilityRank] = None,
+    compliance_status: types.ComplianceStatus | None = None,
+    rank: types.SustainabilityRank | None = None,
     page_size: int = 20,
     offset: int = 0,
 ) -> list[outputs.FarmerSummaryOutput]:

@@ -1,13 +1,13 @@
 """Product aggregate root."""
 
-import typing
 from decimal import Decimal
 
 import pydantic
 
-from src.shared_kernel.domain import aggregates, value_objects as shared_value_objects
 from src.catalog.product.domain import events as product_events
 from src.catalog.product.domain import types, value_objects
+from src.shared_kernel.domain import aggregates
+from src.shared_kernel.domain import value_objects as shared_value_objects
 
 
 class VolumePrice(pydantic.BaseModel):
@@ -31,14 +31,14 @@ class TraceabilityStep(pydantic.BaseModel):
     date: shared_value_objects.PosixTime
     location: str
     responsible: str
-    notes: typing.Optional[str] = None
+    notes: str | None = None
 
 
 class Product(aggregates.BaseAggregateRoot):
     id: value_objects.ProductId
     slug: value_objects.Slug
     name: str
-    description: typing.Optional[str] = None
+    description: str | None = None
     category: types.ProductCategory
     price: Decimal
     institutional_price: Decimal

@@ -1,8 +1,9 @@
 """Unit tests for the User aggregate."""
 
+import pydantic
 import pytest
 
-from src.identity.user.domain import aggregates, events, exceptions, types, value_objects
+from src.identity.user.domain import aggregates, events, types, value_objects
 from src.identity.user.infrastructure.adapters import password
 
 
@@ -85,7 +86,7 @@ class TestUserStatusTransitions:
 
 class TestEmailValueObject:
     def test_invalid_email_raises(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(pydantic.ValidationError):
             value_objects.Email(value="not-an-email")
 
     def test_email_is_case_insensitive(self) -> None:

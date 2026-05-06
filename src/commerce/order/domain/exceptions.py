@@ -18,6 +18,4 @@ class ProductOutOfStockError(shared_exceptions.DomainException):
 
 class MinimumLotNotMetError(shared_exceptions.DomainException):
     def __init__(self, product_id: str, minimum: float, requested: float) -> None:
-        super().__init__(
-            f"Product '{product_id}' requires minimum {minimum} kg, got {requested}"
-        )
+        super().__init__(f"Product '{product_id}' requires minimum {minimum} kg, got {requested}")

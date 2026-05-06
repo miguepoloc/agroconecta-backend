@@ -1,13 +1,13 @@
 """Farmer aggregate root."""
 
-import typing
 from decimal import Decimal
 
 import pydantic
 
-from src.shared_kernel.domain import aggregates, value_objects as shared_value_objects
 from src.catalog.farmer.domain import events as farmer_events
 from src.catalog.farmer.domain import types, value_objects
+from src.shared_kernel.domain import aggregates
+from src.shared_kernel.domain import value_objects as shared_value_objects
 
 
 class Certification(pydantic.BaseModel):
@@ -25,7 +25,7 @@ class Farmer(aggregates.BaseAggregateRoot):
     user_id: str
     region: value_objects.Region
     department: value_objects.Department
-    bio: typing.Optional[str] = None
+    bio: str | None = None
     total_sales: Decimal = Decimal("0")
     compliance_status: types.ComplianceStatus = types.ComplianceStatus.ACTIVE
     sustainability_rank: types.SustainabilityRank = types.SustainabilityRank.BRONZE
@@ -53,7 +53,9 @@ class Farmer(aggregates.BaseAggregateRoot):
         old_status = self.compliance_status
         self.compliance_status = types.ComplianceStatus.ACTIVE
         self.touch()
-        self.record_event(farmer_events.FarmerReactivated(aggregate_id=str(self.id), farmer_id=str(self.id)))
+        self.record_event(
+            farmer_events.FarmerReactivated(aggregate_id=str(self.id), farmer_id=str(self.id))
+        )
         self.record_event(
             farmer_events.ComplianceStatusChanged(
                 aggregate_id=str(self.id),

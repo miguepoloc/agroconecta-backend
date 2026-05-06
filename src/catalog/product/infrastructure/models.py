@@ -70,10 +70,8 @@ class ProductOrm(base.Base):
         sqlalchemy.BigInteger, nullable=False
     )
 
-    volume_prices: sqlalchemy.orm.Mapped[list["VolumePriceOrm"]] = (
-        sqlalchemy.orm.relationship(
-            "VolumePriceOrm", back_populates="product", cascade="all, delete-orphan"
-        )
+    volume_prices: sqlalchemy.orm.Mapped[list["VolumePriceOrm"]] = sqlalchemy.orm.relationship(
+        "VolumePriceOrm", back_populates="product", cascade="all, delete-orphan"
     )
     traceability_steps: sqlalchemy.orm.Mapped[list["TraceabilityStepOrm"]] = (
         sqlalchemy.orm.relationship(
@@ -136,9 +134,7 @@ class TraceabilityStepOrm(base.Base):
     responsible: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
         sqlalchemy.String(255), nullable=False
     )
-    notes: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(
-        sqlalchemy.Text, nullable=True
-    )
+    notes: sqlalchemy.orm.Mapped[str] = sqlalchemy.orm.mapped_column(sqlalchemy.Text, nullable=True)
 
     product: sqlalchemy.orm.Mapped[ProductOrm] = sqlalchemy.orm.relationship(
         "ProductOrm", back_populates="traceability_steps"

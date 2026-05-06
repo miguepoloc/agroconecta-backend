@@ -1,6 +1,5 @@
 """Domain event base — immutable facts about state changes."""
 
-
 import pydantic
 
 from src.shared_kernel.domain import base_model, value_objects
@@ -14,7 +13,9 @@ class DomainEvent(base_model.DomainModel):
         default_factory=value_objects.PosixTime.now
     )
     aggregate_id: str
-    correlation_id: value_objects.UuidId = pydantic.Field(default_factory=value_objects.UuidId.generate)
+    correlation_id: value_objects.UuidId = pydantic.Field(
+        default_factory=value_objects.UuidId.generate
+    )
     version: int = 1
 
     @property

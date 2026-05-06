@@ -40,7 +40,7 @@ class DynamoRefreshTokenAdapter:
                 return None
             if int(item["expires_at"]) <= int(time.time()):
                 return None
-            return item
+            return typing.cast(dict[str, typing.Any], item)
 
     async def delete_by_hash(self, token_hash: str) -> None:
         async with self._session.resource("dynamodb", **self._kwargs) as dynamo:

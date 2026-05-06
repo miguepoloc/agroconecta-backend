@@ -2,8 +2,8 @@
 
 import abc
 
-from src.shared_kernel.application.ports import repositories
 from src.commerce.order.domain import aggregates, value_objects
+from src.shared_kernel.application.ports import repositories
 
 
 class OrderRepository(repositories.Repository[aggregates.Order]):
@@ -11,7 +11,7 @@ class OrderRepository(repositories.Repository[aggregates.Order]):
         return aggregates.Order
 
     @abc.abstractmethod
-    async def find_by_id(
+    async def find_by_id(  # type: ignore[override]
         self, order_id: value_objects.OrderId
     ) -> aggregates.Order | None: ...
 
@@ -24,7 +24,7 @@ class OrderRepository(repositories.Repository[aggregates.Order]):
     async def count_by_year(self, year: int) -> int: ...
 
     @abc.abstractmethod
-    async def find_all(
+    async def find_all(  # type: ignore[override]
         self,
         status: str | None = None,
         order_type: str | None = None,

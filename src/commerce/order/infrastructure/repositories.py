@@ -4,7 +4,8 @@ import sqlalchemy
 import sqlalchemy.ext.asyncio
 import sqlalchemy.orm
 
-from src.commerce.order.domain import aggregates, repositories as order_repos, value_objects
+from src.commerce.order.domain import aggregates, value_objects
+from src.commerce.order.domain import repositories as order_repos
 from src.commerce.order.infrastructure import mappers, models
 
 
@@ -19,7 +20,7 @@ class SqlAlchemyOrderRepository(order_repos.OrderRepository):
         await self._session.merge(orm)
         self._seen.add(order)
 
-    async def find_by_id(
+    async def find_by_id(  # type: ignore[override]
         self, order_id: value_objects.OrderId
     ) -> aggregates.Order | None:
         stmt = (
@@ -52,7 +53,7 @@ class SqlAlchemyOrderRepository(order_repos.OrderRepository):
         result = await self._session.execute(stmt)
         return result.scalar_one()
 
-    async def find_all(
+    async def find_all(  # type: ignore[override]
         self,
         status: str | None = None,
         order_type: str | None = None,

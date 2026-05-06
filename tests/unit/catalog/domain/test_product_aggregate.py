@@ -3,10 +3,11 @@
 import uuid
 from decimal import Decimal
 
+import pydantic
 import pytest
 
-from src.shared_kernel.domain import value_objects as shared_vos
 from src.catalog.product.domain import aggregates, events, types, value_objects
+from src.shared_kernel.domain import value_objects as shared_vos
 
 
 def make_product() -> aggregates.Product:
@@ -40,7 +41,7 @@ class TestFreshnessScore:
         assert score.value == 0
 
     def test_invalid_score_raises(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(pydantic.ValidationError):
             value_objects.FreshnessScore(value=101)
 
 
@@ -106,7 +107,7 @@ class TestLotNumber:
         assert str(lot) == "LOT-2026-0501-01"
 
     def test_invalid_lot_number_raises(self) -> None:
-        with pytest.raises(Exception):
+        with pytest.raises(pydantic.ValidationError):
             value_objects.LotNumber(value="INVALID-FORMAT")
 
     def test_lot_number_is_uppercased(self) -> None:

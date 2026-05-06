@@ -1,16 +1,14 @@
 """SQLAlchemy implementation of FarmerRepository."""
 
-import typing
-
 import sqlalchemy
 import sqlalchemy.ext.asyncio
 import sqlalchemy.orm
 
-from src.shared_kernel.domain import value_objects as shared_value_objects
 from src.catalog.farmer.domain import aggregates as farmer_aggregates
 from src.catalog.farmer.domain import repositories as farmer_repos
 from src.catalog.farmer.domain import types
 from src.catalog.farmer.infrastructure import mappers, models
+from src.shared_kernel.domain import value_objects as shared_value_objects
 
 
 class SqlAlchemyFarmerRepository(farmer_repos.FarmerRepository):
@@ -30,7 +28,7 @@ class SqlAlchemyFarmerRepository(farmer_repos.FarmerRepository):
 
     async def find_by_id(
         self, id: shared_value_objects.DomainId
-    ) -> typing.Optional[farmer_aggregates.Farmer]:
+    ) -> farmer_aggregates.Farmer | None:
         stmt = self._base_stmt().where(models.FarmerOrm.id == str(id))
         result = await self._session.execute(stmt)
         orm = result.scalar_one_or_none()
@@ -40,9 +38,7 @@ class SqlAlchemyFarmerRepository(farmer_repos.FarmerRepository):
         self._seen.add(farmer)
         return farmer
 
-    async def find_by_user_id(
-        self, user_id: str
-    ) -> typing.Optional[farmer_aggregates.Farmer]:
+    async def find_by_user_id(self, user_id: str) -> farmer_aggregates.Farmer | None:
         stmt = self._base_stmt().where(models.FarmerOrm.user_id == user_id)
         result = await self._session.execute(stmt)
         orm = result.scalar_one_or_none()
@@ -64,16 +60,14 @@ class SqlAlchemyFarmerRepository(farmer_repos.FarmerRepository):
 
     async def find_all_filtered(
         self,
-        compliance_status: typing.Optional[types.ComplianceStatus] = None,
-        rank: typing.Optional[types.SustainabilityRank] = None,
+        compliance_status: types.ComplianceStatus | None = None,
+        rank: types.SustainabilityRank | None = None,
         page_size: int = 20,
         offset: int = 0,
     ) -> list[farmer_aggregates.Farmer]:
         stmt = self._base_stmt()
         if compliance_status is not None:
-            stmt = stmt.where(
-                models.FarmerOrm.compliance_status == compliance_status.value
-            )
+            stmt = stmt.where(models.FarmerOrm.compliance_status == compliance_status.value)
         if rank is not None:
             stmt = stmt.where(models.FarmerOrm.sustainability_rank == rank.value)
         stmt = stmt.limit(page_size).offset(offset)

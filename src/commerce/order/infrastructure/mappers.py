@@ -3,9 +3,9 @@
 import datetime
 import decimal
 
-from src.shared_kernel.domain import value_objects as shared_vos
 from src.commerce.order.domain import aggregates, types, value_objects
 from src.commerce.order.infrastructure import models
+from src.shared_kernel.domain import value_objects as shared_vos
 
 
 def orm_to_domain(orm: models.OrderOrm) -> aggregates.Order:
@@ -41,7 +41,7 @@ def domain_to_orm(order: aggregates.Order) -> models.OrderOrm:
     now = shared_vos.PosixTime.now().microseconds
     delivery_ts = int(
         datetime.datetime.combine(order.delivery_date, datetime.time.min)
-        .replace(tzinfo=datetime.timezone.utc)
+        .replace(tzinfo=datetime.UTC)
         .timestamp()
         * 1_000_000
     )

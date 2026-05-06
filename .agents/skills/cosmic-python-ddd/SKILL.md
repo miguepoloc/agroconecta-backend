@@ -1,8 +1,8 @@
 ---
 name: cosmic-python-ddd
 description: |
-  Expert guide for the AgroConecta backend architecture: Hexagonal + DDD following Cosmic Python (cosmicpython.com). 
-  Use this skill whenever the user asks to: create a new bounded context, add a new endpoint, implement a use case or command handler, add domain events, create aggregates or value objects, write repositories or mappers, understand how the layers connect, or debug any architectural question about this codebase. 
+  Expert guide for the AgroConecta backend architecture: Hexagonal + DDD following Cosmic Python (cosmicpython.com).
+  Use this skill whenever the user asks to: create a new bounded context, add a new endpoint, implement a use case or command handler, add domain events, create aggregates or value objects, write repositories or mappers, understand how the layers connect, or debug any architectural question about this codebase.
   Also trigger for: "cómo agrego un endpoint", "crear contexto acotado", "implementar caso de uso", "agregar evento de dominio", "entender la arquitectura", "cómo funciona el UoW", "cómo hago el mapper", "cómo registro el router".
 ---
 
@@ -24,7 +24,7 @@ HTTP request
 
 Three bounded contexts live under `src/`:
 - `identity/user/` — authentication, users
-- `catalog/farmer/` — farmers + certifications  
+- `catalog/farmer/` — farmers + certifications
 - `catalog/product/` — products, prices, traceability
 
 Each context has the same internal structure:
@@ -349,7 +349,7 @@ class CreateEntityInput(base_model.DomainModel):
     name: str
     description: str | None = None
 
-# outputs.py  
+# outputs.py
 class EntityOutput(base_model.DomainModel):
     id: str
     name: str
